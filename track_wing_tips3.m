@@ -178,7 +178,7 @@ if exist(fullfile('single_wing_init_points',[sequence_name '_init_click_combined
         fprintf('\n\n')
         
         f_curr=1;
-        tic
+        % tic
         % run from current frame to end-5 frames
         parfor f=f_curr:n_frames
             
@@ -453,7 +453,7 @@ if exist(fullfile('single_wing_init_points',[sequence_name '_init_click_combined
 %             end
 
         end
-        toc
+        % toc
         % check if there is already a 
         if ~exist('single_wing_tracked_points','dir')
             mkdir('single_wing_tracked_points')
