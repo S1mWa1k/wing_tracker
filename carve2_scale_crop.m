@@ -28,7 +28,7 @@ if nargin<=5
     scale=1;
 end
 
-if nargin<6
+if nargin<=6
     xcrop_adj=0;
     ycrop_adj=0;
 end
