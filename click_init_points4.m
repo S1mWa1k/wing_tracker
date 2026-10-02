@@ -204,13 +204,13 @@ while isgraphics(FigH)
 end
 
 %% POST-CLOSURE SAVE LOGIC
-if ~exist(fullfile('single_wing_init_points',date_folder), 'dir')
-    mkdir(fullfile('single_wing_init_points',date_folder))
+if ~exist(fullfile(project_folder,'single_wing_init_points',date_folder), 'dir')
+    mkdir(fullfile(project_folder,'single_wing_init_points',date_folder))
 end
 
 % if sum(~isnan(xwbL)) > 1 && sum(~isnan(xwbR)) > 1
 if sum(~isnan(xwbL)) > 1
-    save(fullfile('single_wing_init_points',date_folder,[sequence_name '_init_click.mat']),'xwbL','ywbL')
+    save(fullfile(project_folder,'single_wing_init_points',date_folder,[sequence_name '_init_click.mat']),'xwbL','ywbL')
     disp(['Successfully done' sequence_name]);
 else
     disp('Not saved');
