@@ -8,7 +8,7 @@ base_folder   = fullfile('Z:','Beth_Microarena','Calliphora');
 
 project_folder ='Calliphora';
 
-date_folder='2026_08_14';
+date_folder='2026_08_18';
 
 d=dir(fullfile(project_folder,'single_wing_init_points',date_folder,'*_init_click.mat'));
 
@@ -18,20 +18,21 @@ d=dir(fullfile(project_folder,'single_wing_init_points',date_folder,'*_init_clic
 
 sequences={d.name};
 
-% sequences(contains(sequences, 'ackground'))=[];
+% sequences(contains(sequences, 'background'))=[];
 
 for S=1:length(sequences)
 
-    clearvars -except S sequences base_folder date_folder
-    sequence_name=sequences{S};
-    
+    clearvars -except S sequences base_folder date_folder project_folder
+    sequence_name=erase(sequences{S}, '_init_click.mat');
+
     if ~exist(fullfile(project_folder,'single_wing_backgrounds',date_folder,[sequence_name '_backgrounds.mat']),'file')
 
+        sequence_name = erase(sequence_name, '_init_click.mat');
         % sequence_name='S_Fly2_6'; % assumed to be in date folder
         
         %% END EDITABLE PART %%
             
-        if exist(fullfile(project_folder,'single_wing_init_points',date_folder,[sequence_name '_init_click.mat']))
+        if exist(fullfile(project_folder,'single_wing_init_points',date_folder,[sequence_name '_init_click.mat']),'file')
         
             load(fullfile(project_folder,'single_wing_init_points',date_folder,[sequence_name '_init_click.mat']))
         

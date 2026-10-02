@@ -10,12 +10,19 @@ close all
 
 %% EDITABLE PART %%
 % folder where recordings are stored
-base_folder   = fullfile('D:','Micro_arena','Soldier Fly');
+% base_folder   = fullfile('D:','Micro_arena','Soldier Fly');
+% 
+% date_folders={'2026_08_27';
+%               '2026_08_28';
+%               '2026_09_02';
+%               '2026_09_03'};
 
-date_folders={'2026_08_27';
-              '2026_08_28';
-              '2026_09_02';
-              '2026_09_03'};
+base_folder   = fullfile('Z:','Beth_Microarena','Calliphora');
+date_folders={'2026_08_18';
+              '2026_08_19';
+              '2026_09_09'};
+
+project_folder ='Calliphora';
 
 %% END EDITABLE PART %%
 
@@ -26,7 +33,7 @@ sequences_all=[];
 
 for D=1:length(date_folders)
 
-    d=dir(fullfile('single_wing_init_points',date_folders{D},'*_init_click.mat'));
+    d=dir(fullfile(project_folder,'single_wing_init_points',date_folders{D},'*_init_click.mat'));
 
     sequences={d.name};
 
@@ -36,16 +43,14 @@ end
 
 for S=1:length(sequences_all)
 
-    clearvars -except S base_folder dates_all sequences_all
+    clearvars -except project_folder S base_folder dates_all sequences_all
     
     date_folder=dates_all{S};
 
     sequence=sequences_all{S};
     sequence_name=erase(sequence, '_init_click.mat');
 
-    % if ~exist(fullfile('single_wing_tracked_points',date_folder,[sequence_name '_tracked_wt.mat']),'file')
-
-        % sequence_name='S_Fly8_4'; % assumed to be in date folder
+    if ~exist(fullfile('single_wing_tracked_points',date_folder,[sequence_name '_tracked_wt.mat']),'file')
         
         sequence_base = regexprep(sequence_name, '\d+$', '');
         background_name=[sequence_base 'Background'];
@@ -53,9 +58,9 @@ for S=1:length(sequences_all)
         % load calibration file - assumed to be in base_folder -> date_folder
         % calib_name='Calib_AM_S_Fly settings results';
 
-        d=dir(fullfile('calibrations',date_folder,'*.mat'));
+        d=dir(fullfile(project_folder,'calibrations',date_folder,'*.mat'));
         calib_name=d.name;
-        load(fullfile('calibrations',date_folder, calib_name));
+        load(fullfile(project_folder,'calibrations',date_folder, calib_name));
 
         max_wing_length=12; % estimate of maximum likely wing length (mm)
                 
@@ -106,8 +111,8 @@ for S=1:length(sequences_all)
         f_start=1;
     
         % load initial points
-        load(fullfile('single_wing_init_points',date_folder,[sequence_name '_init_click.mat']))
-        load(fullfile('single_wing_backgrounds',date_folder,[sequence_name '_backgrounds.mat']))
+        load(fullfile(project_folder,'single_wing_init_points',date_folder,[sequence_name '_init_click.mat']))
+        load(fullfile(project_folder,'single_wing_backgrounds',date_folder,[sequence_name '_backgrounds.mat']))
     
         % end
         % find camera file in sequence folder
@@ -478,17 +483,34 @@ for S=1:length(sequences_all)
         end
         % toc
         % check if there is already a 
-        if ~exist(fullfile('single_wing_tracked_points',date_folder),'dir')
-            mkdir(fullfile('single_wing_tracked_points',date_folder))
+        if ~exist(fullfile(project_folder,'single_wing_tracked_points',date_folder),'dir')
+            mkdir(fullfile(project_folder,'single_wing_tracked_points',date_folder))
         end
     
+        if ~exist(fullfile(project_folder,'wt_path_png',date_folder),'dir')
+            mkdir(fullfile(project_folder,'wt_path_png',date_folder))
+        end
+        
         disp(['finished ' sequence_name])
-        save(fullfile('single_wing_tracked_points',date_folder,[sequence_name '_tracked_wt.mat']),'Xwt','Ywt','Zwt','Xwt0','Ywt0','Zwt0','xxwtL','yywtL','Xwb','Ywb','Zwb','Xwb0','Ywb0','Zwb0','Fs','n_frames')
+        save(fullfile(project_folder,'single_wing_tracked_points',date_folder,[sequence_name '_tracked_wt.mat']),'Xwt','Ywt','Zwt','Xwt0','Ywt0','Zwt0','xxwtL','yywtL','Xwb','Ywb','Zwb','Xwb0','Ywb0','Zwb0','Fs','n_frames')
     
-        plot3(Xwt0,Ywt0,Zwt0);axis image; labels
+        plot3(Xwt0,Ywt0,Zwt0,'linewidth',1.5);axis image; hold on
+        plot3(Xwb0,Ywb0,Zwb0,'.','markersize',25)
+        xlabel('x (mm)')
+        ylabel('x (mm)')
+        zlabel('x (mm)')
+
+        set(gcf,'color','w','position',[100 100 1024 1024])
+        set(gca,'fontsize',18,'linewidth',2)
+        sequence_title = replace(sequence_name, '_', '-');
+        title([sequence_title ' wt path'])
+
         drawnow
         pause(0.2)
+        % return
+% 
+        print('-dpng','-r0',fullfile(project_folder,'wt_path_png',date_folder,[sequence_name '.png']))
         close
-    % end
+    end
 
 end

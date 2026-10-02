@@ -10,9 +10,18 @@ close all
 
 %% EDITABLE PART %%
 % folder where recordings are stored
-base_folder   = fullfile('D:','Micro_arena','Soldier Fly');
-date_folder='2026_09_02';
-sequence_name='S_Fly7_1'; % assumed to be in date folder
+% base_folder   = fullfile('D:','Micro_arena','Soldier Fly');
+% date_folder='2026_09_02';
+% sequence_name='S_Fly7_1'; % assumed to be in date folder
+
+base_folder   = fullfile('Z:','Beth_Microarena','Calliphora');
+date_folder   = '2026_08_18';
+sequence_name = 'Fly7_1'; 
+% calib_name    = 'Calib_AM_results';
+
+project_folder ='Calliphora';
+
+%% END EDITABLE PART %%
 
 sequence_base = regexprep(sequence_name, '\d+$', '');
 background_name=[sequence_base 'Background'];
@@ -20,13 +29,11 @@ background_name=[sequence_base 'Background'];
 % background_name='S_Fly6_Background';
 
 % load calibration file - assumed to be in base_folder -> calibrations -> date_folder
-d=dir(fullfile('calibrations',date_folder,'*.mat'));
+d=dir(fullfile(project_folder,'calibrations',date_folder,'*.mat'));
 calib_name=d.name;
-load(fullfile('calibrations',date_folder, calib_name));
+load(fullfile(project_folder,'calibrations',date_folder, calib_name));
 
 max_wing_length=12; % estimate of maximum likely wing length (mm)
-
-%% END EDITABLE PART %%
 
 % set to 0 to disable drawing while the tracker runs (improves speed).
 draw=1;
@@ -83,11 +90,11 @@ sequences=[];
 f_start=1;
 
 % check that initial points have already been clicked on
-if exist(fullfile('single_wing_init_points',date_folder,[sequence_name '_init_click.mat']),'file')
+if exist(fullfile(project_folder,'single_wing_init_points',date_folder,[sequence_name '_init_click.mat']),'file')
 
     % load initial points
-    load(fullfile('single_wing_init_points',date_folder,[sequence_name '_init_click.mat']))
-    load(fullfile('single_wing_backgrounds',date_folder,[sequence_name '_backgrounds.mat']))
+    load(fullfile(project_folder,'single_wing_init_points',date_folder,[sequence_name '_init_click.mat']))
+    load(fullfile(project_folder,'single_wing_backgrounds',date_folder,[sequence_name '_backgrounds.mat']))
 
     % end
     % if the sequence isn't already finished, run tracker
@@ -372,8 +379,6 @@ if exist(fullfile('single_wing_init_points',date_folder,[sequence_name '_init_cl
             Ywt(f)=XX_wt(2);
             Zwt(f)=XX_wt(3);
 
-            return
-
             % 
             % plot3(voxels_wing2(1,:),voxels_wing2(2,:),voxels_wing2(3,:),'.'); hold on
             % plot3(voxels_wt(1,:),voxels_wt(2,:),voxels_wt(3,:),'.')
@@ -480,7 +485,7 @@ if exist(fullfile('single_wing_init_points',date_folder,[sequence_name '_init_cl
 
                 % refresh onscreen
                 drawnow
-                return
+                % return
 % 
 %                 if stop_vid==1
 %                     return
@@ -496,14 +501,14 @@ if exist(fullfile('single_wing_init_points',date_folder,[sequence_name '_init_cl
 
         % toc
         % check if there is already a 
-        if ~exist(fullfile('single_wing_tracked_points',date_folder),'dir')
-            mkdir(fullfile('single_wing_tracked_points',date_folder))
+        if ~exist(fullfile(project_folder,'single_wing_tracked_points',date_folder),'dir')
+            mkdir(fullfile(project_folder,'single_wing_tracked_points',date_folder))
         end
 
         % if it gets to the end, then set finished=1 and save file
         close all
         disp('finished')
-        save(fullfile('single_wing_tracked_points',date_folder,[sequence_name '_tracked_wt.mat']),'Xwt','Ywt','Zwt','Xwt0','Ywt0','Zwt0','xxwtL','yywtL','Xwb','Ywb','Zwb','Xwb0','Ywb0','Zwb0','Fs','n_frames','rec_freq')
+        save(fullfile(project_folder,'single_wing_tracked_points',date_folder,[sequence_name '_tracked_wt.mat']),'Xwt','Ywt','Zwt','Xwt0','Ywt0','Zwt0','xxwtL','yywtL','Xwb','Ywb','Zwb','Xwb0','Ywb0','Zwb0','Fs','n_frames','rec_freq')
 
 end
 
