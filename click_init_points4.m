@@ -2,13 +2,21 @@ clear
 close all
 
 %% EDITABLE PART %%
-base_folder   = fullfile('D:','Micro_arena');
-date_folder   = '2026_06_30';
-sequence_name = 'Fly7_a'; 
-calib_name    = 'Fly6_calib_results_0dist';
+% base_folder   = fullfile('D:','Micro_arena','Soldier Fly');
+% date_folder   = '2026_08_27';
+% sequence_name = 'S_Fly1_7'; 
+% calib_name    = 'Calib_AM_results';
+
+base_folder   = fullfile('Z:','Beth_Microarena','Calliphora');
+date_folder   = '2026_09_09';
+sequence_name = 'Fly15_2'; 
+calib_name    = 'Calib_AM_results';
+
+project_folder ='Calliphora';
+
 %% END EDITABLE PART %%
 
-i_use = 26;
+i_use = 1;
 
 % Colors for wingbase plots
 col_wb = [0.0 0.0 0.8; 0.0 0.4 1.0; 0.0 0.6 0.6; 0.0 0.8 0.0;
@@ -18,7 +26,7 @@ col_wb = [0.0 0.0 0.8; 0.0 0.4 1.0; 0.0 0.6 0.6; 0.0 0.8 0.0;
 filenames = dir(fullfile(base_folder, date_folder, sequence_name, '*.cihx'));
 filenames = {filenames.name};
 use_cams = [7 8];
-load(fullfile(date_folder, calib_name));
+load(fullfile(project_folder, 'calibrations', date_folder, calib_name));
 
 % Pre-allocate based on highest camera index
 max_cam  = use_cams(end);
@@ -196,12 +204,14 @@ while isgraphics(FigH)
 end
 
 %% POST-CLOSURE SAVE LOGIC
-if ~exist('single_wing_init_points', 'dir')
-    mkdir('single_wing_init_points')
+if ~exist(fullfile('single_wing_init_points',date_folder), 'dir')
+    mkdir(fullfile('single_wing_init_points',date_folder))
 end
 
 % if sum(~isnan(xwbL)) > 1 && sum(~isnan(xwbR)) > 1
 if sum(~isnan(xwbL)) > 1
-    save(fullfile('single_wing_init_points',[sequence_name '_init_click.mat']),'xwbL','ywbL')
-    disp('Successfully completed save block.');
+    save(fullfile('single_wing_init_points',date_folder,[sequence_name '_init_click.mat']),'xwbL','ywbL')
+    disp(['Successfully done' sequence_name]);
+else
+    disp('Not saved');
 end
