@@ -20,7 +20,8 @@ close all
 base_folder   = fullfile('Z:','Beth_Microarena','Calliphora');
 date_folders={'2026_08_18';
               '2026_08_19';
-              '2026_09_09'};
+              '2026_09_09';
+              '2026_09_10'};
 
 project_folder ='Calliphora';
 
@@ -41,7 +42,7 @@ for D=1:length(date_folders)
     dates_all=[dates_all;repmat(date_folders(D),length(sequences),1)];
 end
 
-for S=1:length(sequences_all)
+for S=44:length(sequences_all)
 
     clearvars -except project_folder S base_folder dates_all sequences_all
     
@@ -50,7 +51,7 @@ for S=1:length(sequences_all)
     sequence=sequences_all{S};
     sequence_name=erase(sequence, '_init_click.mat');
 
-    if ~exist(fullfile('single_wing_tracked_points',date_folder,[sequence_name '_tracked_wt.mat']),'file')
+    if ~exist(fullfile(project_folder,'single_wing_tracked_points',date_folder,[sequence_name '_tracked_wt.mat']),'file')
         
         sequence_base = regexprep(sequence_name, '\d+$', '');
         background_name=[sequence_base 'Background'];
